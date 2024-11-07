@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Test</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+    <script>
+        var socket = new SockJS('http://localhost:8080/ws');
+
+        socket.onopen = function() {
+          console.log('Connected to WebSocket');
+          socket.send("/app/locations/10001"); // Subscribe to the topic
+        };
+
+        socket.onmessage = function(event) {
+          console.log('Received message:', event.data);
+        };
+
+        socket.onclose = function() {
+          console.log('WebSocket connection closed');
+        };
+    </script>
+</head>
+<body>
+<h1>WebSocket Test</h1>
+<input type="text" id="messageInput" placeholder="Enter your message here" />
+<button onclick="sendMessage()">Send Message</button>
+</body>
+</html>
