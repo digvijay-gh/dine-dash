@@ -59,9 +59,9 @@ public class UserService {
     public void updateUser(User userInDb, User inputUser) {
         try {
             if (userInDb != null) {
-                if (userInDb.getUsername() != null && !userInDb.getUsername().isEmpty())
+                if (inputUser.getUsername() != null && !inputUser.getUsername().isEmpty())
                     userInDb.setUsername(inputUser.getUsername());
-                if (userInDb.getPassword() != null && !userInDb.getPassword().isEmpty())
+                if (inputUser.getPassword() != null && !inputUser.getPassword().isEmpty())
                     userInDb.setPassword(passwordEncoder.encode(inputUser.getPassword()));
                 if (inputUser.getEmail() != null)
                     userInDb.setEmail(inputUser.getEmail());

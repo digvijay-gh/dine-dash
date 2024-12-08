@@ -1,5 +1,7 @@
 package software.digvijay.dinedash.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,12 +9,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import software.digvijay.dinedash.dto.InputRestaurantDTO;
+import software.digvijay.dinedash.dto.InputMenuItemDTO;
+import software.digvijay.dinedash.dto.LoginDTO;
+import software.digvijay.dinedash.dto.RestaurantSignUpDTO;
 import software.digvijay.dinedash.dto.RestaurantDetailsDTO;
 import software.digvijay.dinedash.entity.restaurant.MenuItem;
 import software.digvijay.dinedash.entity.restaurant.Restaurant;
@@ -21,10 +23,12 @@ import software.digvijay.dinedash.service.RestaurantService;
 import software.digvijay.dinedash.service.UserDetailsServiceImpl;
 import software.digvijay.dinedash.utils.JwtUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/restaurant")
+@Tag(name = "Restaurant APIs",description = "Restaurant related services")
 public class RestaurantController {
     @Autowired
     private RestaurantService restaurantService;
@@ -36,17 +40,18 @@ public class RestaurantController {
     private UserDetailsServiceImpl userDetailsService;
     @Autowired
     private AuthenticationManager authenticationManager;
-
+    @Operation(summary = "Get details of restaurant")
     @GetMapping("/getDetails")
     public ResponseEntity<?> getRestaurantDetails() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Restaurant restaurantDetails = restaurantService.getRestaurantDetails(username);
         return new ResponseEntity<>(new RestaurantDetailsDTO(restaurantDetails), HttpStatus.OK);
     }
-
+    @Operation(summary = "Restaurant SignUp")
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@RequestBody InputRestaurantDTO inputRestaurant) {
+    public ResponseEntity<?> signup(@RequestBody RestaurantSignUpDTO inputRestaurant) {
         try {
+
             Restaurant restaurant = new Restaurant(inputRestaurant);
             restaurantService.saveNewRestaurant(restaurant);
             return new ResponseEntity<>(new RestaurantDetailsDTO(restaurant), HttpStatus.OK);
@@ -55,9 +60,11 @@ public class RestaurantController {
         }
 
     }
+    @Operation(summary = "Restaurant Login")
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Restaurant restaurant){
+    public ResponseEntity<?> login(@RequestBody LoginDTO loginDetails){
         try {
+            Restaurant restaurant=new Restaurant(loginDetails);
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(restaurant.getUsername(), restaurant.getPassword()));
             UserDetails userDetails = userDetailsService.loadUserByUsername(restaurant.getUsername());
@@ -77,7 +84,8 @@ public class RestaurantController {
     }
 
     @PutMapping("/update-details")
-    public ResponseEntity<?> updateRestaurantDetails(@RequestBody Restaurant newDetails) {
+    public ResponseEntity<?> updateRestaurantDetails(@RequestBody RestaurantDetailsDTO newDetailsDTO) {
+        Restaurant newDetails=new Restaurant(newDetailsDTO);
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         Restaurant restaurant = restaurantService.getRestaurantDetails(name);
         restaurantService.updateRestaurantDetails(restaurant, newDetails);
@@ -94,7 +102,11 @@ public class RestaurantController {
     }
 
     @PutMapping("/add-items")
-    public ResponseEntity<?> addNewItems(@RequestBody List<MenuItem> items) {
+    public ResponseEntity<?> addNewItems(@RequestBody List<InputMenuItemDTO> itemsDTO) {
+        ArrayList<MenuItem> items = new ArrayList<>();
+        for(InputMenuItemDTO dto:itemsDTO){
+            items.add(new MenuItem(dto));
+        }
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         Restaurant restaurant = restaurantService.getRestaurantDetails(name);
         restaurantService.addItemsToMenu(restaurant, items);

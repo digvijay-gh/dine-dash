@@ -30,7 +30,7 @@ public class SpringSecurity {
 
 
         return http.authorizeHttpRequests(request -> request
-                        .requestMatchers("/user/signup", "/user/login", "/user/get-all-user", "/restaurant/signup", "/restaurant/login", "/public/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**","/user/signup", "/user/login", "/user/get-all-user", "/restaurant/signup", "/restaurant/login", "/public/**").permitAll()
                         .requestMatchers("/user/**").hasRole("USER")
                         .requestMatchers("/restaurant/**").hasRole("RESTAURANT")
                         .anyRequest().authenticated())

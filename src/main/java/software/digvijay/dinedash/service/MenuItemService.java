@@ -9,6 +9,7 @@ import software.digvijay.dinedash.entity.Location;
 import software.digvijay.dinedash.entity.restaurant.MenuItem;
 import software.digvijay.dinedash.repository.MenuItemRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -74,4 +75,7 @@ public class MenuItemService {
     }
 
 
+    public List<MenuItem> getAllItems() {
+        return menuItemRepository.findAll();
+    }
 }

@@ -10,10 +10,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import software.digvijay.dinedash.dto.NearbyRestaurantDTO;
 import software.digvijay.dinedash.dto.RestaurantDetailsDTO;
 import software.digvijay.dinedash.entity.Location;
 import software.digvijay.dinedash.entity.restaurant.MenuItem;
 import software.digvijay.dinedash.entity.restaurant.Restaurant;
+import software.digvijay.dinedash.entity.user.User;
 import software.digvijay.dinedash.repository.RestaurantRepository;
 
 import java.util.Arrays;
@@ -42,12 +44,12 @@ public class RestaurantService {
         return restaurantRepository.findById(id);
     }
 
-    public List<RestaurantDetailsDTO> getRestaurantByCity(Location origin, String city) {
+    public List<NearbyRestaurantDTO> getRestaurantByCity(Location origin, String city) {
         try {
             Query query = new Query();
             query.addCriteria(Criteria.where("city").is(city));
             List<Restaurant> restaurants = mongoTemplate.find(query, Restaurant.class);
-            List<RestaurantDetailsDTO> restaurantDetailsDTOS = distanceAPIService.restaurantsInCityResponse(restaurants, origin);
+            List<NearbyRestaurantDTO> restaurantDetailsDTOS = distanceAPIService.restaurantsInCityResponse(restaurants, origin);
             return restaurantDetailsDTOS;
         } catch (Exception e) {
             log.error("Error while getting restaurant for {}", city, e);
@@ -153,4 +155,7 @@ public class RestaurantService {
     }
 
 
+    public List<Restaurant> getAllUsers() {
+        return restaurantRepository.findAll();
+    }
 }

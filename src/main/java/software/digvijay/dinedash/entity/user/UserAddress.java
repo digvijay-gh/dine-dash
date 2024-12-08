@@ -4,6 +4,7 @@ package software.digvijay.dinedash.entity.user;
 import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
+import software.digvijay.dinedash.dto.UserAddressDTO;
 import software.digvijay.dinedash.entity.Location;
 
 import java.util.List;
@@ -19,5 +20,11 @@ public class UserAddress {
     private String city;
     @NonNull
     private Location location;
+    public UserAddress(UserAddressDTO userAddressDTO){
+            this.streetAddress= userAddressDTO.getStreetAddress();
+            this.city= userAddressDTO.getCity();
+            this.location= userAddressDTO.getLocation();
+    }
+
 
 }

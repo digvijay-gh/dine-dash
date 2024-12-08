@@ -10,8 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import software.digvijay.dinedash.dto.RestaurantDetailsDTO;
-import software.digvijay.dinedash.entity.Location;
+import software.digvijay.dinedash.dto.NearbyRestaurantDTO;
+
+import software.digvijay.dinedash.entity.*;
 import software.digvijay.dinedash.entity.responses.GoogleMapsResponse;
 import software.digvijay.dinedash.entity.restaurant.MenuItem;
 import software.digvijay.dinedash.entity.restaurant.Restaurant;
@@ -35,14 +36,14 @@ public class DistanceAPIService {
     @Autowired
     private MenuItemService menuItemService;
 
-    public List<RestaurantDetailsDTO> restaurantsInCityResponse(List<Restaurant> restaurants, Location source) {
+    public List<NearbyRestaurantDTO> restaurantsInCityResponse(List<Restaurant> restaurants, Location source) {
         try {
             String origin = source.getLocationString();
             String destinations = getDestinationString(restaurants);
             GoogleMapsResponse body = getGoogleMapsResponse(origin, destinations);
             if (body != null) {
-                List<RestaurantDetailsDTO> restaurantDetailsList = addDistanceAndDurationToRestaurantList(restaurants, body);
-                restaurantDetailsList.sort(Comparator.comparingInt(RestaurantDetailsDTO::getDistance));
+                List<NearbyRestaurantDTO> restaurantDetailsList = addDistanceAndDurationToRestaurantList(restaurants, body);
+                restaurantDetailsList.sort(Comparator.comparingInt(NearbyRestaurantDTO::getDistance));
                 return restaurantDetailsList;
             }
             return Collections.emptyList();
@@ -53,11 +54,11 @@ public class DistanceAPIService {
 
     }
 
-    private List<RestaurantDetailsDTO> addDistanceAndDurationToRestaurantList(List<Restaurant> restaurants, GoogleMapsResponse body) {
+    private List<NearbyRestaurantDTO> addDistanceAndDurationToRestaurantList(List<Restaurant> restaurants, GoogleMapsResponse body) {
         List<GoogleMapsResponse.Element> elements = body.getRows().get(0).getElements();
-        List<RestaurantDetailsDTO> restaurantDetailsList = new ArrayList<>();
+        List<NearbyRestaurantDTO> restaurantDetailsList = new ArrayList<>();
         for (int i = 0; i < restaurants.size(); i++) {
-            RestaurantDetailsDTO restaurantDetails = new RestaurantDetailsDTO(restaurants.get(i));
+            NearbyRestaurantDTO restaurantDetails = new NearbyRestaurantDTO(restaurants.get(i));
             if (elements.get(i).getDistance() != null)
                 restaurantDetails.setDistance(elements.get(i).getDistance().getValue());
             if (elements.get(i).getDuration() != null)

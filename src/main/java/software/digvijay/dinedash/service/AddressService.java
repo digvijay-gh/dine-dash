@@ -8,6 +8,7 @@ import software.digvijay.dinedash.entity.user.User;
 import software.digvijay.dinedash.entity.user.UserAddress;
 import software.digvijay.dinedash.repository.UserAddressRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -77,5 +78,9 @@ public class AddressService {
             log.error("Error while updating address- {} for {}", newAddress, user.getUsername(), e);
             throw new RuntimeException(e);
         }
+    }
+
+    public List<UserAddress> getAllAddress() {
+        return userAddressRepository.findAll();
     }
 }

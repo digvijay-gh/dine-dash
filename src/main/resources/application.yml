@@ -10,29 +10,32 @@ spring:
       uri: ${MONGODB_URI}
       database: fooddb
       auto-index-creation: true
-  kafka:
-    bootstrap-servers: ${KAFKA_SERVERS}
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-    consumer:
-      group-id: intellij-group
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-      properties:
-        spring:
-          json:
-            trusted:
-              packages: '*'
-    properties:
-      security:
-        protocol: SASL_SSL
-      sasl:
-        mechanism: PLAIN
-        jaas:
-          config: org.apache.kafka.common.security.plain.PlainLoginModule required username='${KAFKA_USERNAME}' password='${KAFKA_PASSWORD}';
-      session:
-        timeout:
-          ms: 45000
+#  kafka:
+#    bootstrap-servers: ${KAFKA_SERVERS}
+#    producer:
+#      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+#      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+#    consumer:
+#      group-id: intellij-group
+#      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+#      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+#      properties:
+#        spring:
+#          json:
+#            trusted:
+#              packages: '*'
+#    properties:
+#      security:
+#        protocol: SASL_SSL
+#      sasl:
+#        mechanism: PLAIN
+#        jaas:
+#          config: org.apache.kafka.common.security.plain.PlainLoginModule required username='${KAFKA_USERNAME}' password='${KAFKA_PASSWORD}';
+#      session:
+#        timeout:
+#          ms: 45000
+springdoc:
+  swagger-ui:
+    path: /docs
 API:
   GOOGLE_MAPS: ${MAPS_API_KEY}

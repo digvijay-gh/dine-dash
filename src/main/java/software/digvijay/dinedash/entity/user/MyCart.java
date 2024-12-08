@@ -19,4 +19,12 @@ public class MyCart {
     private int deliveryDistance;
     private int deliveryDuration;
     private List<MenuItem> cartItems = new ArrayList<>();
+    public MyCart(MyCart cart){
+        this.restaurantId=cart.getRestaurantId();
+        this.total=cart.getTotal();
+        this.deliveryCost=cart.getDeliveryCost();
+        this.deliveryDistance=cart.getDeliveryDistance();
+        this.deliveryDuration=cart.getDeliveryDuration();
+        this.cartItems=cart.getCartItems();
+    }
 }
